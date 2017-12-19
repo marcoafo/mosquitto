@@ -38,6 +38,7 @@ Contributors:
 #    define libwebsocket_callback_reasons lws_callback_reasons
 #    define libwebsocket lws
 #  endif
+#define lws_pollfd pollfd
 #endif
 
 #include <mosquitto_internal.h>

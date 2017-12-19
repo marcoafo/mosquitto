@@ -417,7 +417,8 @@ static int callback_http(struct libwebsocket_context *context,
 	struct stat filestat;
 	struct mosquitto_db *db = &int_db;
 	struct mosquitto *mosq;
-	struct lws_pollargs *pollargs = (struct lws_pollargs *)in;
+	//struct lws_pollargs *pollargs = (struct lws_pollargs *)in;
+	int fd;
 
 	/* FIXME - ssl cert verification is done here. */
 
@@ -591,9 +592,12 @@ static int callback_http(struct libwebsocket_context *context,
 
 		case LWS_CALLBACK_ADD_POLL_FD:
 		case LWS_CALLBACK_DEL_POLL_FD:
-		case LWS_CALLBACK_CHANGE_MODE_POLL_FD:
-			HASH_FIND(hh_sock, db->contexts_by_sock, &pollargs->fd, sizeof(pollargs->fd), mosq);
-			if(mosq && (pollargs->events & POLLOUT)){
+		case LWS_CALLBACK_SET_MODE_POLL_FD:
+			fd = (int)(long)user;
+
+			HASH_FIND(hh_sock, db->contexts_by_sock, &fd, sizeof(fd), mosq);
+			if(mosq){
+
 				mosq->ws_want_write = true;
 			}
 			break;
